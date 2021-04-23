@@ -1,0 +1,257 @@
+<!--<div class="col-sm-12">You are logged in as {{ _authService.username }}.<br />
+    Access Token Expires: {{ _authService.accessTokenExpires }}<br />
+    Refresh Token Expires: {{ _authService.refreshTokenExpires }}<br />
+    <button (click)="refreshToken()" class="btn btn-primary">Refresh Token</button>
+    <button (click)="logout()" class="btn btn-primary">Log Out</button>
+    <button (click)="openApp()" class="btn btn-primary">Go to App</button>
+    <button (click)="getImages()" class="btn btn-primary">Get Images</button>
+  </div>
+  <div>
+    <label class="image-upload-container btn btn-bwm">
+      <span>Select Image</span>
+      <input #imageInput
+             type="file"
+             accept="image/*"
+             (change)="processFile(imageInput)">
+    </label>
+    
+    
+    <div *ngIf="selectedFile" class="img-preview-container">
+    
+      <div class="img-preview{{selectedFile.status === 'fail' ? '-error' : ''}}"
+           [ngStyle]="{'background-image': 'url('+ selectedFile.src + ')'}">
+      </div>
+    
+      <div *ngIf="selectedFile.pending" class="img-loading-overlay">
+        <div class="img-spinning-circle"></div>
+      </div>
+    
+      <div *ngIf="selectedFile.status === 'ok'" class="alert alert-success"> Image Uploaded Succesfuly!</div>
+      <div *ngIf="selectedFile.status === 'fail'" class="alert alert-danger"> Image Upload Failed!</div>
+    </div>
+  </div>
+  <div>
+    <span *ngFor="let i of images">
+      <img src="{{i.image}}" width="500"/>
+    </span>
+  </div>
+
+  <mat-form-field class="login login-input">
+    <mat-label>Password</mat-label>
+    <input matInput type="password" [(ngModel)]="user.password">
+  </mat-form-field>
+  <br/>
+  <button mat-raised-button class="login login-button" color="primary" (click)="login()">Login</button>-->
+
+<div>
+    <span class="menu">
+        <img class="logo" src="../../../assets/images/logo_icon_wob.png"/>
+        <button class="menu-icon" mat-icon-button (click)="logout()">
+            <mat-icon class="menu-icon">logout</mat-icon>
+        </button>
+    </span>
+    <span class="submenu">
+        <img class="logo logo-no-icon" src="../../../assets/images/logo_no_icon.png"/>
+        <button color="primary" mat-button class="submenu-button" (click)="uploadPage()">Upload an Image</button>
+        <button color="primary" mat-button class="submenu-button" (click)="viewPage()">View Images</button>
+    </span>
+    <span class="content" *ngIf="home">
+        <div class="header">
+            <a class="mat-display-3 page-title">Home</a>
+        </div>
+        <div>
+            <a class="mat-display-1 page-title">
+                Use the submenu buttons on the left to navigate.
+            </a>
+        </div>
+    </span>
+    <span class="content" *ngIf="upload">
+        <div class="header">
+            <a class="mat-display-3 page-title">Upload an Image</a>
+        </div>
+        <div data-simplebar class="content-pane">
+            <div class="inputs">
+                <form [formGroup]="form" (ngSubmit)="uploadImage()">
+                    <a class="mat-h1">Select Image</a>
+                    <mat-form-field  class="input-field">
+                        <mat-label>Select Image</mat-label>
+                        <ngx-mat-file-input #image formControlName="image" placeholder="Select Image" type="file" class="input"></ngx-mat-file-input>
+                        <button mat-icon-button matSuffix *ngIf="!image.empty" (click)="image.clear($event)">
+                            <mat-icon>clear</mat-icon>
+                        </button>
+                        <mat-error *ngIf="form.get('image').hasError('required')">
+                            Image is required
+                        </mat-error>
+                    </mat-form-field>
+                    <a class="mat-h1">Have you uploaded an image of this lesion before?</a>
+                    <br/>
+                    <mat-checkbox formControlName="existingLesion" class="input-field">Yes</mat-checkbox>
+                    <mat-checkbox formControlName="newLesion" class="input-field">No</mat-checkbox>
+                    <br/>
+                    <ng-container *ngIf="form.get('newLesion').value == true">
+                        <a class="mat-h1">Describe Skin Lesion</a>
+                        <mat-form-field  class="input-field">
+                            <mat-label>Location on Body</mat-label>
+                            <mat-select #region formControlName="region" class="input">
+                                <mat-option value="head">Head</mat-option>
+                                <mat-option value="front_torso">Front Torso</mat-option>
+                                <mat-option value="back_torso">Back</mat-option>
+                                <mat-option value="right_arm">Right Arm</mat-option>
+                                <mat-option value="left_arm">Left Arm</mat-option>
+                                <mat-option value="right_leg">Right Leg</mat-option>
+                                <mat-option value="left_leg">Left Leg</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="form.get('region').hasError('required')">
+                                Region is required
+                            </mat-error>
+                        </mat-form-field>
+                        <!--<mat-form-field class="input-field">
+                            <mat-label>Lesion Number</mat-label>
+                            <input #lesion_id matInput type="text" formControlName="lesion_id" class="input">
+                            <mat-error *ngIf="form.get('lesion_id').hasError('required')">
+                                Lesion Number is required
+                            </mat-error>
+                        </mat-form-field>-->
+                        <mat-form-field class="input-field">
+                            <mat-label>Description</mat-label>
+                            <textarea #description matInput formControlName="description" class="input"></textarea>
+                            <mat-error *ngIf="form.get('description').hasError('required')">
+                                Description is required
+                            </mat-error>
+                        </mat-form-field>
+                    </ng-container>
+                    <ng-container *ngIf="form.get('existingLesion').value == true">
+                        <a class="mat-h1">Select Existing Lesion</a>
+                        <mat-form-field  class="input-field">
+                            <mat-label>Location on Body</mat-label>
+                            <mat-select #region formControlName="region" class="input">
+                                <mat-option value="head">Head</mat-option>
+                                <mat-option value="front_torso">Front Torso</mat-option>
+                                <mat-option value="back_torso">Back</mat-option>
+                                <mat-option value="right_arm">Right Arm</mat-option>
+                                <mat-option value="left_arm">Left Arm</mat-option>
+                                <mat-option value="right_leg">Right Leg</mat-option>
+                                <mat-option value="left_leg">Left Leg</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="form.get('region').hasError('required')">
+                                Region is required
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field  class="input-field">
+                            <mat-label>Lesion</mat-label>
+                            <mat-select #region formControlName="lesion" class="input">
+                                <mat-option *ngFor="let l of lesions" value="{{l.lesion_id}}">{{l.lesion_id}}: {{l.description}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="form.get('region').hasError('required')">
+                                Region is required
+                            </mat-error>
+                        </mat-form-field>
+                    </ng-container>
+                    <button mat-button [disabled]="!form.valid" type="submit" class="upload-button">Upload</button>
+                    <!--<button mat-button (click)="uploadImage()" [disabled]="!form.valid" type="submit" class="upload-button">Upload</button>-->
+                </form>
+                <div *ngIf="uploadPending==true" class="input-field">
+                    <div class="loading-spinner">
+                        <a class="mat-h1">Uploading</a>
+                        <mat-spinner mode="indeterminate"></mat-spinner>
+                    </div>
+                </div>
+                <div *ngIf="uploadPending==false && uploadCompleted" class="input-field">
+                    <div class="loading-spinner">
+                        <a *ngIf="uploadSuccess" class="mat-h1">Upload Success</a>
+                        <a *ngIf="!uploadSuccess" class="mat-h1">Upload Failure</a>
+                    </div>
+                </div>
+            </div>
+            <div class="display">
+                <a *ngIf="imageUrl != null" class="mat-h1">Selected Image Preview</a>
+                <div>
+                    <img src="{{imageUrl}}" class="image-preview"/>
+                    <div class="classification-tag-upload unclear" *ngIf="classification == 'unclear'">Unclear</div>
+                    <div class="classification-tag-upload melanoma" *ngIf="classification == 'melanoma'">Melanoma</div>
+                    <div class="classification-tag-upload benign" *ngIf="classification == 'benign'">Benign</div>
+                    <div class="classification-tag-upload nevus" *ngIf="classification == 'nevus'">Nevus</div>
+                </div>
+            </div>
+        </div>
+    </span>
+    <span class="content" *ngIf="view"  data-simplebar>
+        <div class="header">
+            <a class="mat-display-3 page-title">View Images</a>
+        </div>
+        <div *ngIf="gettingImages==true" class="content-pane">
+            <div class="loading-spinner">
+                <a class="mat-h1">Loading</a>
+                <mat-spinner mode="indeterminate"></mat-spinner>
+            </div>
+        </div>
+        <!--<div *ngIf="images.length != 0 && gettingImages == false" data-simplebar class="content-pane">
+            <a class="mat-h1 image-tool">Number of Columns: {{numCols}}</a>
+            <mat-slider min="1" max="5" step="1" value="{{numCols}}" [(ngModel)]="numCols"></mat-slider>
+            <mat-grid-list cols="{{numCols}}" rowHeight="1:1">
+                <mat-grid-tile *ngFor="let i of images">
+                    <mat-card class="image-card" *ngIf="i.imageURL">
+                        <img class="skin-image" src="{{i.imageURL}}"/>
+                        <a *ngIf="i.region == 'Head'">Location: Head</a>
+                        <a *ngIf="i.region == 'back_torso'">Location: Back</a>
+                        <a *ngIf="i.region == 'front_torso'">Location: Front Torso</a>
+                        <a *ngIf="i.region == 'right_arm'">Location: Right Arm</a>
+                        <a *ngIf="i.region == 'left_arm'">Location: Left Arm</a>
+                        <a *ngIf="i.region == 'right_leg'">Location: Right Leg</a>
+                        <a *ngIf="i.region == 'left_leg'">Location: Left Leg</a>
+                        <br/>
+                        <a>Description: {{i.description}}</a>
+                        <div class="classification-tag unclear" *ngIf="i.image_classification == 'unclear'">Unclear</div>
+                        <div class="classification-tag melanoma" *ngIf="i.image_classification == 'melanoma'">Melanoma</div>
+                        <div class="classification-tag benign" *ngIf="i.image_classification == 'benign'">Benign</div>
+                        <div class="classification-tag nevus" *ngIf="i.image_classification == 'nevus'">Nevus</div>
+                    </mat-card>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </div>
+        <div *ngIf="images.length == 0 && gettingImages == false" data-simplebar class="content-pane">
+            <a class="mat-h1 image-tool">No images found</a>
+        </div>-->
+        <div *ngIf="regions.length != 0 && gettingImages == false" class="content-pane">
+            <!--<a class="mat-h1 image-tool">Number of Columns: {{numCols}}</a>
+            <mat-slider min="1" max="5" step="1" value="{{numCols}}" [(ngModel)]="numCols"></mat-slider>-->
+            <mat-accordion>
+                <ng-container *ngFor="let r of regions">
+                    <mat-expansion-panel *ngIf="r.lesions.length > 0">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title *ngIf="r.region == 'head'" style="font-weight: bold;">Location: Head</mat-panel-title>
+                            <mat-panel-title *ngIf="r.region == 'back_torso'" style="font-weight: bold;">Location: Back</mat-panel-title>
+                            <mat-panel-title *ngIf="r.region == 'front_torso'" style="font-weight: bold;">Location: Front Torso</mat-panel-title>
+                            <mat-panel-title *ngIf="r.region == 'right_arm'" style="font-weight: bold;">Location: Right Arm</mat-panel-title>
+                            <mat-panel-title *ngIf="r.region == 'left_arm'" style="font-weight: bold;">Location: Left Arm</mat-panel-title>
+                            <mat-panel-title *ngIf="r.region == 'right_leg'" style="font-weight: bold;">Location: Right Leg</mat-panel-title>
+                            <mat-panel-title *ngIf="r.region == 'left_leg'" style="font-weight: bold;">Location: Left Leg</mat-panel-title>
+                            <mat-panel-description class="expansion-panel-description">Number of Lesions: {{r.lesions.length}}</mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <div *ngFor="let l of r.lesions">
+                            <a>Lesion {{l.lesion_id}}: {{l.description}}</a>
+                            <mat-grid-list cols="{{numCols}}" rowHeight="1:1">
+                                <mat-grid-tile *ngFor="let i of l.images">
+                                    <mat-card class="image-card" *ngIf="i.imageURL">
+                                        <img class="skin-image" src="{{i.imageURL}}"/>
+                                        <br/>
+                                        <a class="image-date">{{i.date_uploaded}}</a>
+                                        <br/>
+                                        <div class="classification-tag unclear" *ngIf="i.image_classification == 'unclear'">Unclear</div>
+                                        <div class="classification-tag melanoma" *ngIf="i.image_classification == 'melanoma'">Melanoma</div>
+                                        <div class="classification-tag benign" *ngIf="i.image_classification == 'benign'">Benign</div>
+                                        <div class="classification-tag nevus" *ngIf="i.image_classification == 'nevus'">Nevus</div>
+                                    </mat-card>
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                        </div>
+                    </mat-expansion-panel>
+                </ng-container>
+            </mat-accordion>
+        </div>
+        <div *ngIf="regions.length == 0 && gettingImages == false" data-simplebar class="content-pane">
+            <a class="mat-h1 image-tool">No images found</a>
+        </div>
+    </span>
+</div>
+  

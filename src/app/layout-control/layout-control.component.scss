@@ -1,0 +1,86 @@
+.layout-vertical {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    vertical-align: top;
+}
+
+.layout-horizontal {
+    height: 100%;
+    min-height: 100%;
+    max-height: 100%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.fill-vertical {
+    height: 100%;
+    min-height: 100%;
+}
+
+.fill-horizontal {
+    width: 100%;
+}
+
+.banner {
+    height: var(--banner-height);
+    background-color: orange;
+}
+
+.container-under-banner {
+    height: calc(100% - var(--banner-height));
+}
+
+.menu {
+    width: var(--menu-width);
+    background-color: blue;
+}
+
+.sub-menu {
+    width: var(--sub-menu-width);
+    background-color: lightblue;
+}
+
+.content-container {
+    width: calc(100% - var(--menu-width) - var(--sub-menu-width) - var(--action-menu-width));
+
+    .header {
+        height: var(--header-height);
+        background-color: green;
+    }
+
+    .content-pane {
+        width: calc(100% - var(--edit-pane-width));
+    }
+
+    .edit-pane {
+        width: var(--edit-pane-width);
+    }
+}
+
+.action-menu {
+    width: var(--action-menu-width);
+    float: right;
+    background-color: red;
+}
+
+.rectangle {
+    position: relative;
+    right: var(--right-content-container-limit);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 300px;
+    height: 150px;
+    background-color: #fd4140;
+    border: solid 1px #121621;
+    color: #121621;
+    margin: auto;
+}
+.resize-handle-left {
+    position: absolute;
+    height: 100%;
+    cursor: col-resize;
+    width: 5px;
+    left: 0;
+}

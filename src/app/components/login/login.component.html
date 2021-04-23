@@ -1,0 +1,77 @@
+<!--<h2>Log In</h2>
+<div class="row" *ngIf="!_authService.accessToken">
+  <div class="col-sm-4">
+    <label>Username:</label><br />
+    <input [(ngModel)]="user.username" type="text" name="login-username">
+    <span *ngFor="let error of _authService.errors.username"><br />
+    {{ error }}</span></div>
+  <div class="col-sm-4">
+    <label>Password:</label><br />
+    <input type="password" name="login-password" [(ngModel)]="user.password">
+    <span *ngFor="let error of _authService.errors.password"><br />
+    {{ error }}</span>
+  </div>
+  <div class="col-sm-4">
+    <button (click)="login()" class="btn btn-primary">Log In</button>
+  </div>
+  <div class="col-sm-12">
+    <span *ngFor="let error of _authService.errors.non_field_errors">{{ error }}<br /></span>
+  </div>
+</div>
+<div class="row" *ngIf="_authService.accessToken">
+  <div class="col-sm-12">You are logged in as {{ _authService.username }}.<br />
+    Access Token Expires: {{ _authService.accessTokenExpires }}<br />
+    Refresh Token Expires: {{ _authService.refreshTokenExpires }}<br />
+    <button (click)="refreshToken()" class="btn btn-primary">Refresh Token</button>
+    <button (click)="logout()" class="btn btn-primary">Log Out</button>
+    <button (click)="openApp()" class="btn btn-primary">Go to App</button>
+    <button (click)="getImages()" class="btn btn-primary">Get Images</button>
+  </div>
+  <div>
+    <label class="image-upload-container btn btn-bwm">
+      <span>Select Image</span>
+      <input #imageInput
+             type="file"
+             accept="image/*"
+             (change)="processFile(imageInput)">
+    </label>
+    
+    
+    <div *ngIf="selectedFile" class="img-preview-container">
+    
+      <div class="img-preview{{selectedFile.status === 'fail' ? '-error' : ''}}"
+           [ngStyle]="{'background-image': 'url('+ selectedFile.src + ')'}">
+      </div>
+    
+      <div *ngIf="selectedFile.pending" class="img-loading-overlay">
+        <div class="img-spinning-circle"></div>
+      </div>
+    
+      <div *ngIf="selectedFile.status === 'ok'" class="alert alert-success"> Image Uploaded Succesfuly!</div>
+      <div *ngIf="selectedFile.status === 'fail'" class="alert alert-danger"> Image Upload Failed!</div>
+    </div>
+  </div>
+  <div>
+    <span *ngFor="let i of images">
+      <img src="{{i.image}}" width="500"/>
+    </span>
+  </div>
+</div>-->
+<div class="wallpaper">
+  <mat-card class="login login-card">
+    <img src="../../../assets/images/logo_horizontal.png" class="logo"/>
+    <mat-card-content>
+      <mat-form-field class="login login-input">
+        <mat-label>Username</mat-label>
+        <input matInput type="text" [(ngModel)]="user.username">
+      </mat-form-field>
+      <br/>
+      <mat-form-field class="login login-input">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" [(ngModel)]="user.password">
+      </mat-form-field>
+      <br/>
+      <button mat-raised-button class="login login-button" color="primary" (click)="login()">Login</button>
+    </mat-card-content>
+  </mat-card>
+</div>
